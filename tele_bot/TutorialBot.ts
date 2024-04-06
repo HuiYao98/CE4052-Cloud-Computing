@@ -1,5 +1,7 @@
 import { Bot, InlineKeyboard } from "grammy";
 import { Menu } from "@grammyjs/menu";
+import { InputFile } from "grammy/out/types.node";
+import * as fs from 'fs';
 
 //Setting interface
 interface BotConfig {
@@ -13,9 +15,10 @@ const botConfig: BotConfig = {
     targetLanguage: 'Spanish',
 };
 
-
+//token
+const token = "6991582486:AAGVKAI23eL1dKKZ-Lv-S3o3KGcKh_tSIP4";
 // Create an instance of the `Bot` class and pass your bot token to it.
-const bot = new Bot("6991582486:AAGVKAI23eL1dKKZ-Lv-S3o3KGcKh_tSIP4"); // <-- put your bot token between the ""
+const bot = new Bot(token); // <-- put your bot token between the ""
 // Pre-assign menu text
 const mainMenuText = () => {
     return `<b>Translation Bot menu </b>
@@ -80,15 +83,53 @@ bot.command("menu", async (ctx) => {
     await ctx.reply(mainMenuText(), { reply_markup: mainMenu });
 });
 
+//Handle pictures
+bot.on("message:photo", async (ctx) => {
+    try {
+        const photo = ctx.message?.photo;
+        //check last photo
+        const fileId = photo?.[photo.length - 1].file_id
+        if (fileId) {
+
+            //Get the fileUrl
+            const file_info = await ctx.getFile();
+            //const file_id = file_info.file_id;
+            const file_path = file_info.file_path;
+            const url = `https://api.telegram.org/file/bot${token}/${file_path}`
+            await ctx.reply(url)
+            //download photo
+            const filePath = `./tempStorage/${fileId}.jpg`;
+            const response = await fetch(url);
+            const buffer = await response.arrayBuffer();
+            fs.writeFileSync(filePath, Buffer.from(buffer));
+
+
+            // Delete the downloaded photo from the local storage
+            fs.unlinkSync(filePath);
+
+            await ctx.reply("Uploading successful")
+        }
+
+    }
+    catch (error) {
+        console.error('Error', error);
+        await (ctx.reply("An error occured while processing the photo."));
+    }
+
+
+})
+
+
 //handle any messages
-bot.on("message", async (ctx) => {
+bot.on("message:text", async (ctx) => {
     //Print to console
+    console.log("In normal message handling");
     // console.log(
     //     `${ctx.from.first_name} wrote ${"text" in ctx.message ? ctx.message.text : ""
     //     }`,
     // );
     //print to console
-    console.log(ctx.message);
+    //console.log(ctx.message);
 
     const message = ctx.message.text;
     //Send reply
@@ -97,5 +138,7 @@ bot.on("message", async (ctx) => {
     }
 
 });
+
+
 // Start the bot.
 bot.start();
