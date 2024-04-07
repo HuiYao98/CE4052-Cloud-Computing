@@ -2,9 +2,10 @@ import { Bot, InlineKeyboard } from "grammy";
 import { Menu } from "@grammyjs/menu";
 import { InputFile } from "grammy/out/types.node";
 import * as fs from 'fs';
+import { translateText } from "./TranslateText";
 
 //Setting interface
-interface BotConfig {
+export interface BotConfig {
     baseLanguage: String;
     targetLanguage: String;
 }
@@ -134,7 +135,10 @@ bot.on("message:text", async (ctx) => {
     const message = ctx.message.text;
     //Send reply
     if (message) {
-        await ctx.reply(message);
+        console.log(botConfig.baseLanguage);
+        console.log(botConfig.targetLanguage)
+        await ctx.reply("Translating message:" + message + "...");
+        await translateText(ctx, message, botConfig);
     }
 
 });
