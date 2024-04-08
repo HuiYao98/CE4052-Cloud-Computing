@@ -2,6 +2,22 @@ import { Bot, InlineKeyboard } from "grammy";
 import { Menu } from "@grammyjs/menu";
 import { InputFile } from "grammy/out/types.node";
 import * as fs from 'fs';
+import { Storage } from '@google-cloud/storage';
+import axios from 'axios';
+
+//For Google file storage
+
+//Create new google cloud storage client
+const storage = new Storage(
+    {
+        projectId: "prime-micron-419504",
+        keyFilename: "../key.json"
+    }
+);
+
+//Specify bucket name
+const bucketName = 'cz4052-uploaded-pictures';
+
 
 //Setting interface
 interface BotConfig {
@@ -97,18 +113,38 @@ bot.on("message:photo", async (ctx) => {
             const file_path = file_info.file_path;
             const url = `https://api.telegram.org/file/bot${token}/${file_path}`
             await ctx.reply(url)
-            //download photo
+            //Get the local path
             const filePath = `./tempStorage/${fileId}.jpg`;
-            const response = await fetch(url);
-            const buffer = await response.arrayBuffer();
-            fs.writeFileSync(filePath, Buffer.from(buffer));
+            //Download the image
+            const response = await axios.get(url, { responseType: 'arraybuffer' });
+            const photoBuffer = Buffer.from(response.data, 'binary');
 
+            //Write the image to local
+            //For debugging
+            fs.writeFileSync(filePath, Buffer.from(photoBuffer));
+
+            //Upload photo to GCS
+            const bucket = storage.bucket(bucketName);
+            const blob = bucket.file(`${fileId}.jpg`);
+            await blob.save(photoBuffer, {
+                metadata: {
+                    contentType: 'image/jpeg',
+                },
+            });
 
             // Delete the downloaded photo from the local storage
-            fs.unlinkSync(filePath);
+            //fs.unlinkSync(filePath);
+            //get the public URL of the uploaded photo
+            const [google_url] = await blob.getSignedUrl({
+                action: 'read',
+                expires: Date.now() + 1000 * 60 //URL Expiration time is 1 min
+            })
 
-            await ctx.reply("Uploading successful")
+            //Send reply
+
+            await ctx.reply("Photo recieved and uploaded \n " + google_url)
         }
+
 
     }
     catch (error) {
