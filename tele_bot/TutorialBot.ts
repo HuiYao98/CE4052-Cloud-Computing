@@ -5,6 +5,8 @@ import * as fs from 'fs';
 import { Storage } from '@google-cloud/storage';
 import axios from 'axios';
 
+import { translateText } from "./TranslateText";
+
 //For Google file storage
 
 //Create new google cloud storage client
@@ -19,8 +21,9 @@ const storage = new Storage(
 const bucketName = 'cz4052-uploaded-pictures';
 
 
+
 //Setting interface
-interface BotConfig {
+export interface BotConfig {
     baseLanguage: String;
     targetLanguage: String;
 }
@@ -170,7 +173,10 @@ bot.on("message:text", async (ctx) => {
     const message = ctx.message.text;
     //Send reply
     if (message) {
-        await ctx.reply(message);
+        console.log(botConfig.baseLanguage);
+        console.log(botConfig.targetLanguage)
+        await ctx.reply("Translating message:" + message + "...");
+        await translateText(ctx, message, botConfig);
     }
 
 });
