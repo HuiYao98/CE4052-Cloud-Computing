@@ -6,11 +6,13 @@
     "scripts": {
         "start": "ts-node ./TutorialBot.ts",
         "dev": "ts-node-dev ./TutorialBot.ts",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "createtopic": "ts-node ./topic_scripts/CreateTopics.ts"        
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@google-cloud/pubsub": "^4.3.3",
         "@grammyjs/menu": "^1.2.1",
         "dotenv": "^16.4.5",
         "grammy": "^1.11.2",
