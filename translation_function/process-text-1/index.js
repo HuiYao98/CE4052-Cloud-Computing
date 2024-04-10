@@ -4,7 +4,6 @@ const {
   HarmCategory,
   HarmBlockThreshold,
 } = require("@google/generative-ai");
-const chatfunc = require('./chatfunc/chatfunc');
 // Imports the Google Cloud client library
 const {PubSub} = require('@google-cloud/pubsub');
 
@@ -63,13 +62,13 @@ functions.cloudEvent('helloPubSub', async cloudEvent => {
       },
       {
         role: "model",
-        parts: [{ text: "{translated_text: \"你什么时候想出去吃饭？\", base_language: \"English\", target_language:\"Chinese\"}"}],
+        parts: [{ text: "{\"translated_text\": \"你什么时候想出去吃饭？\", \"base_language\": \"English\", \"target_language\":\"Chinese\"}"}],
       },
     ],
   });
   const prompt = `Translate this message from ${message_input.base} to ${message_input.target}.
     Message to Translate: ${message_input.msg}
-    Example Output Response format: {translated_text: "厕所在哪里？", base_language: "English", target_language:"Chinese"}
+    Example Output Response format: {"translated_text": "厕所在哪里？", "base_language": "English", "target_language":"Chinese"}
   `;
   
   const result = await chat.sendMessage(prompt);
