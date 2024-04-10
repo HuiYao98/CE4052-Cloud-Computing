@@ -27,6 +27,8 @@ async function createSubscription(
     .createSubscription(subscriptionNameOrId);
   console.log(`Subscription ${subscriptionNameOrId} created.`);
 }
+// Uncomment each of the functions below (1 at a time) and run the script in the package.json for running this file.
+// This is for creating the topic and subscriptions by code (if it is not created in the console)
 //createTopic(translator_req_topicName);
 //createTopic(translator_res_topicName);
 createSubscription(translator_res_topicName, translator_res_pullsubscriptionName);

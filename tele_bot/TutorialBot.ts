@@ -1,4 +1,4 @@
-import { Bot, InlineKeyboard } from "grammy";
+import { Bot, Context, InlineKeyboard, SessionFlavor, session } from "grammy";
 import { Menu } from "@grammyjs/menu";
 import { InputFile } from "grammy/out/types.node";
 import * as fs from 'fs';
@@ -6,6 +6,16 @@ import { Storage } from '@google-cloud/storage';
 import axios from 'axios';
 
 import { translateText } from "./TranslateText";
+import { createConfigMenu } from "./menus/configmenu";
+import { bold, fmt, hydrateReply, italic, link } from "@grammyjs/parse-mode";
+import type { ParseModeFlavor } from "@grammyjs/parse-mode";
+import {
+    type Conversation,
+    type ConversationFlavor,
+    conversations,
+    createConversation,
+  } from "@grammyjs/conversations";
+import { translate } from "./conversations/conversationfuncs";
 
 //For Google file storage
 
@@ -28,81 +38,68 @@ export interface BotConfig {
     targetLanguage: String;
 }
 
-//Create config
-const botConfig: BotConfig = {
-    baseLanguage: 'English',
-    targetLanguage: 'Spanish',
-};
+// Custom types for conversations and parse-mode and having sessions
+export type MyContext = Context & ConversationFlavor & SessionFlavor<BotConfig>;
+export type MyConversation = Conversation<MyContext>;
 
 //token
 const token = "6991582486:AAGVKAI23eL1dKKZ-Lv-S3o3KGcKh_tSIP4";
 // Create an instance of the `Bot` class and pass your bot token to it.
-const bot = new Bot(token); // <-- put your bot token between the ""
-// Pre-assign menu text
-const mainMenuText = () => {
-    return `<b>Translation Bot menu </b>
+const bot = new Bot<ParseModeFlavor<MyContext>>(token); // <-- put your bot token between the ""
 
+// Create List of commands to show in menu
+bot.api.setMyCommands([
+    {command: "start", description: "Instructions"},
+    {command: "config", description: "Language configuration"},
+    {command: "translate", description: "Initiate Translation"},
+])
+// Create Configurations Menu:
+const configMenuObj = createConfigMenu();
 
-    Base Language: ${botConfig.baseLanguage}
-    Target Language: ${botConfig.targetLanguage}
-    
-    You can change the language settings here`;
-}
+// Install the various plugins.
+bot.use(hydrateReply);
+// Install session middleware, and define the initial session value.
+function initial(): BotConfig {
+    return { baseLanguage: 'English',
+    targetLanguage: 'Chinese', };
+  }
+bot.use(session({ initial }));
+bot.use(conversations());
 
-
-//set the languages
-const languages = ["English", "Chinese", "Malay", "Thai"];
-
-//Define main menu
-const mainMenu = new Menu('main-menu-identififer')
-    .submenu("Select Base Language", 'language-menu-base')
-    .submenu("Select Target Language", 'language-menu-target');
-
-//Define language submenu
-const createLanguageMenu = (type: 'base' | 'target') => {
-    //Set target or base language
-    const languageMenu = new Menu(`language-menu-${type}`);
-
-    languages.forEach((language) => {
-        languageMenu.text(language, async (ctx) => {
-
-            if (type === 'base') {
-                botConfig.baseLanguage = language;
-            }
-            else if (type == 'target') {
-                botConfig.targetLanguage = language;
-            }
-
-            await ctx.reply(`${type === 'base' ? 'Base' : 'Target'} language set to ${language}`);
-            await ctx.editMessageText(mainMenuText(), { reply_markup: mainMenu });
-
-
-        });
-    });
-
-    languageMenu.back("Go Back");
-
-    return languageMenu;
-};
-
-//Create  menu objects
-const baseLanguageMenu = createLanguageMenu('base');
-const targetLanguageMenu = createLanguageMenu('target');
-
-// Register settings menus at main menu
-mainMenu.register(baseLanguageMenu);
-mainMenu.register(targetLanguageMenu);
+// Install Conversation builder functions:
+bot.use(createConversation(translate));
 
 //Bot to use main menu
-bot.use(mainMenu);
+bot.use(configMenuObj.MainObj);
 
-//Handle the command /menu
-bot.command("menu", async (ctx) => {
+// Always exit any conversation upon /cancel
+bot.command("cancel", async (ctx : MyContext) => {
+    await ctx.conversation.exit();
+    await ctx.reply("Leaving.");
+  });
+
+//Handle the command /config
+bot.command("config", async (ctx) => {
     // Send the menu
-    await ctx.reply(mainMenuText(), { reply_markup: mainMenu });
+    await ctx.replyWithHTML(
+        configMenuObj.MenuText(
+            ctx.session.baseLanguage, ctx.session.targetLanguage), 
+            { reply_markup: configMenuObj.MainObj });
 });
 
-//Handle pictures
+// Handles the command /translate - enters a conversation
+bot.command("translate", async (ctx) => {
+    await ctx.conversation.enter("translate");
+});
+
+bot.command("start", async (ctx) => {
+    await ctx.replyWithHTML(`Welcome to <b>Language Translation Bot!</b>
+
+You can first set the base and target language to translate to using the /config command. 
+Once the languages have been set, you can use the /translate command to start translating!`);
+});
+
+//Handle pictures - not edited yet
 bot.on("message:photo", async (ctx) => {
     try {
         const photo = ctx.message?.photo;
@@ -154,33 +151,15 @@ bot.on("message:photo", async (ctx) => {
         console.error('Error', error);
         await (ctx.reply("An error occured while processing the photo."));
     }
-
-
 })
 
 
 //handle any messages
 bot.on("message:text", async (ctx) => {
-    //Print to console
-    console.log("In normal message handling");
-    // console.log(
-    //     `${ctx.from.first_name} wrote ${"text" in ctx.message ? ctx.message.text : ""
-    //     }`,
-    // );
-    //print to console
-    //console.log(ctx.message);
-
     const message = ctx.message.text;
-    //Send reply
-    if (message) {
-        console.log(botConfig.baseLanguage);
-        console.log(botConfig.targetLanguage)
-        await ctx.reply("Translating message:" + message + "...");
-        await translateText(ctx, message, botConfig);
-    }
-
+    console.log("Normal Message Written");
+    await ctx.reply("Invalid input, please start with one of the commands in the Menu!");
 });
-
 
 // Start the bot.
 bot.start();
