@@ -1,6 +1,7 @@
 import { InlineKeyboard } from "grammy";
 import { MyContext, MyConversation } from "../TutorialBot";
-import { translateText } from "../TranslateText";
+import { translateText } from "../translate/TranslateText";
+import { translateImg } from "../translate/TranslateImg";
 
 /** Defines the conversation */
 export async function translate(conversation: MyConversation, ctx: MyContext) {
@@ -16,15 +17,19 @@ Enter /cancel to cancel the translation.`);
     }
     // Handle case if user uploads picture to translate -- Not done yet 
     else if (message?.photo) {
-        outputPromises.push(ctx.reply("That is a photo! Translating Photo..."));
+        const photo = message.photo
+        outputPromises.push(ctx.reply("That is a photo! Uploading Photo for Translation..."));
+        const translationPhotoPromise = conversation.external(() => translateImg(ctx, photo));
+        outputPromises.push(translationPhotoPromise);
     } else if (!message || !message.text) {
         outputPromises.push(ctx.reply(`Message not given! Please try again...`));
     }
     // Handle case for translating text message: 
     else {
-        const translationPromise = translateText(ctx, message?.text);
+        const textMsg = message.text
+        const translationTextPromise = conversation.external(() => translateText(ctx, textMsg));
         outputPromises.push(ctx.reply(`Translating message: ${message.text}...`));
-        outputPromises.push(translationPromise);
+        outputPromises.push(translationTextPromise);
     }
 
     // Wait for all output promises to complete

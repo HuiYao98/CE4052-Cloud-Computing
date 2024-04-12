@@ -2,7 +2,7 @@ import { Bot, Context, InlineKeyboard, SessionFlavor, session } from "grammy";
 import { Menu } from "@grammyjs/menu";
 import { InputFile } from "grammy/out/types.node";
 import * as fs from 'fs';
-import { translateText } from "./TranslateText";
+import { translateText } from "./translate/TranslateText";
 import { createConfigMenu } from "./menus/configmenu";
 import { bold, fmt, hydrateReply, italic, link } from "@grammyjs/parse-mode";
 import type { ParseModeFlavor } from "@grammyjs/parse-mode";
@@ -13,6 +13,8 @@ import {
     createConversation,
   } from "@grammyjs/conversations";
 import { translate } from "./conversations/conversationfuncs";
+import config from './config/endpoints.config'
+import { FileFlavor, hydrateFiles } from "@grammyjs/files";
 
 //Setting interface
 export interface BotConfig {
@@ -21,11 +23,11 @@ export interface BotConfig {
 }
 
 // Custom types for conversations and parse-mode and having sessions
-export type MyContext = Context & ConversationFlavor & SessionFlavor<BotConfig>;
+export type MyContext = FileFlavor<Context> & ConversationFlavor & SessionFlavor<BotConfig> ;
 export type MyConversation = Conversation<MyContext>;
 
-//token
-const token = "6991582486:AAGVKAI23eL1dKKZ-Lv-S3o3KGcKh_tSIP4";
+// Token
+const token = config.TELEGRAM_BOT_API_TOKEN;
 // Create an instance of the `Bot` class and pass your bot token to it.
 const bot = new Bot<ParseModeFlavor<MyContext>>(token); // <-- put your bot token between the ""
 
@@ -35,10 +37,12 @@ bot.api.setMyCommands([
     {command: "config", description: "Language configuration"},
     {command: "translate", description: "Initiate Translation"},
 ])
+
 // Create Configurations Menu:
 const configMenuObj = createConfigMenu();
 
 // Install the various plugins.
+bot.api.config.use(hydrateFiles(bot.token));
 bot.use(hydrateReply);
 // Install session middleware, and define the initial session value.
 function initial(): BotConfig {
