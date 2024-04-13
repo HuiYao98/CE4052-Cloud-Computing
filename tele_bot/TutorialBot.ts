@@ -84,7 +84,7 @@ bot.command("start", async (ctx) => {
 You can first set the base and target language to translate to using the /config command. 
 Once the languages have been set, you can use the /translate command to start translating!`);
 });
-
+/*
 //Handle pictures - not edited yet
 bot.on("message:photo", async (ctx) => {
     try {
@@ -119,7 +119,7 @@ bot.on("message:photo", async (ctx) => {
     }
 })
 
-
+*/
 //handle any messages
 bot.on("message:text", async (ctx) => {
     const message = ctx.message.text;
