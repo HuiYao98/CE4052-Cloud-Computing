@@ -1,0 +1,14 @@
+{
+    "configurations": [
+      {
+        "name": "Deploy Cloud Function",
+        "type": "cloudcode.cloudfunctions",
+        "request": "launch",
+        "functionName": "function-hello-world",
+        "gen": "GEN_2",
+        "entryPoint": "helloPubSubVoice",
+        "region": "asia-southeast1",
+        "runtime": "nodejs20"
+      }
+    ]
+}

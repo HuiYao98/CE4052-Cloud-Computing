@@ -1,4 +1,4 @@
-import { MyContext } from "./TutorialBot";
+import { MyContext } from "../TutorialBot";
 // Imports the Google Cloud client library
 import { PubSub, Message } from '@google-cloud/pubsub';
 
