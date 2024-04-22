@@ -1,0 +1,16 @@
+{
+  "configurations": [
+    {
+      "name": "Deploy Cloud Function",
+      "type": "cloudcode.cloudfunctions",
+      "request": "launch",
+      "functionName": "function-overlay-text",
+      "gen": "GEN_2",
+      "entryPoint": "overlayTextOnImage",
+      "revision": "function-overlay-text-00001-xeb",
+      "testInput": "",
+      "region": "asia-southeast1",
+      "runtime": "python310"
+    }
+  ]
+}

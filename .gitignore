@@ -1,0 +1,15 @@
+
+node_modules
+
+./tele_bot/.env
+./telebot/node_modules
+./tele_bot/keys
+./image-processing-new/keys
+./image-processing/.env
+./image-overlay/keys
+./image-overlay/env
+./image-overlay/keys
+./image-overlay/env
+/cloudvision
+
+

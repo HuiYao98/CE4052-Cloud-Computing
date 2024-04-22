@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "prime-micron-419504",
+  "private_key_id": "da20296440fc528ffb5e1f1ffffbd00dd96ef2b9",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDQcWzDTtMrXgWl\nKgdHq3kml6ma7gQONWopzGhbWfuJtEcWIyJ8rFX79Nd48cl6fEPfr2FN/3P+R8N4\nTaQLX55/IN7+tsBYaSh7pWPPAfVmYPa4EcHxR3Om1TLhWhtE2wY+H6x+Y6zk0yWT\n7bg0paumZPwab/ZJL8hMN0gaIWbF2uU0DR6J1LmhbCjjAAwHtnzyF28JmnNpap2G\ncaKAX7pGb6J4mH12qArawJsACnCPGFDVTZFHkALriZYyEVnAxywa8mNKOWKLVrsD\nFEcaym1ONJdb5usXpbIga72fi0rZgu4IB2EhCw6S2IgpvXOrsj3tVeJvrqNiSKvz\n7EDkmkDFAgMBAAECggEAE7ZA7dtndu4bpI9BRFLVUIP+gxXyhjwg6mEClsOqA6TB\nJY50YCFADxAMIcuOcn82lVHAPEsQd2yRR1ri95G3AG4QXeV/HR1HZHdd5UwEdAZu\nw+DSBspAsqHuKjIw6qW32mojut7G5pYyiIxuOMmuCOdQkVjN4VqbxjFi0oMeyqO0\nC5cm4+ZSI2Nq3UgrfXPgl2/xz5gp9Ft2D2Wiap0jA1UoIRy09IFkX838mae4imJP\nwscEW+/S2OYjDfDO27iNgmjyXGcIupWhiiQHQZFpREooZIHqvCUhSJ/f78Fqf539\nrBACM3xjdN9OUjKXZnwTLhXZs/3SirzGTM6/a8xkRQKBgQDn1XW8kaqmMPrp8aSc\nZ9Suj2Qd9bpfViqJ8EJzmlUtJztxh4omEhGJsPj+I0x+DKbT8+fAPuxHD2HwG895\nrXF0cdfS692uwnCIylypeJ6Nua7MH5txg2dJVxFX05q+OdPeOA3PMrTj4wN6aOb3\nufVd0hN2zeBpn8D/wy6QxfT4ywKBgQDmK8bn6I5IS5MXrF/9NYgkogqghyIsNC5y\n/swSEhP09Y9/1qeR0XSxm1sgdrsTSc4ojsgJR81vI49CdDhXiaxFcAcaxSb2iXrW\nTEJN8Y+s12Sf593aV6dWB7Dec9xoukO8t3BJNlX9eUNjMb6Ahq5O7GrXD7ZpUjTM\nOD4uWvzKrwKBgHcLuMKU9lESs7Wv3PxnoOHmRd3QkdxkzcE5O5ZLONPP4olgtULp\nYlIXKzStAZl0e7I4+9dPOFsg/gSi8z4jHzBRSSdI8PPNaqYDa+OmSZyzLZwp2tNG\nS6JwcDpuMXbfEPl6RTURb6vZpa6U8Y1h0ypTNqV6AHOckimDm4TB8hJTAoGAc/5N\nv+MniPFlEEITIaTPlj5/AoT3SLWHTvZu2xB3NDRn+7GuQsL+ft7e3o5XGpJQLYo+\n7sZblg2ijYfKOPstcNTTD7+ZMhb4a3SE2YjJsf3ePON5nyYbMzSvAnv68GAl8L20\n/YA/d3yb5CpWaaj1wNpNwVGuyIbgCqaxV2UNDgsCgYADeEUM1uIBUCkH6TApSu7t\nFKTEXEeR4yIkkMyY+vpaljLViItxeNT3Xfc63Ac8OvSwaJNerBi0txnET1qQzn7R\nbpa+bMjknjJvX+saGPYGckA9zi3zwB5BJtD0j+sjO3MfJFMfONLk4W+NQVPRUDtp\nSCOBdH4QpVpP4Yuk2Ys1yw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "tele-bot-image-pubsub@prime-micron-419504.iam.gserviceaccount.com",
+  "client_id": "113196936967750322616",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/tele-bot-image-pubsub%40prime-micron-419504.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
