@@ -5,12 +5,8 @@ import { Storage } from '@google-cloud/storage';
 import { PhotoSize } from "grammy/types";
 import config from '../config/endpoints.config'
 import axiosInstance from "../utils/axios";
-import { DEFAULT_PROJECT_ID_TOKEN } from "@google-cloud/storage/build/cjs/src/nodejs-common/service";
 
-
-
-
-export async function translateImg(ctx: MyContext, photo: PhotoSize[]) {
+export async function translateImg(ctx: MyContext, photo : PhotoSize[]) {
     //For Google file storage
     //Create new google cloud storage client
     const storage = new Storage(

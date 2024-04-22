@@ -1,6 +1,6 @@
 import { Bot, Context, InlineKeyboard, SessionFlavor, session } from "grammy";
 import { Menu } from "@grammyjs/menu";
-import { InputFile } from "grammy";
+import { InputFile } from "grammy/out/types.node";
 import * as fs from 'fs';
 import { translateText } from "./translate/TranslateText";
 import { createConfigMenu } from "./menus/configmenu";
@@ -23,7 +23,7 @@ export interface BotConfig {
 }
 
 // Custom types for conversations and parse-mode and having sessions
-export type MyContext = FileFlavor<Context> & ConversationFlavor & SessionFlavor<BotConfig> ;
+export type MyContext = FileFlavor<Context> & ConversationFlavor & SessionFlavor<BotConfig>;
 export type MyConversation = Conversation<MyContext>;
 
 // Token
@@ -103,26 +103,15 @@ bot.on("message:photo", async (ctx) => {
             await ctx.reply(url)
             //download photo
             const filePath = `./tempStorage/${fileId}.jpg`;
-            //Download the image
-            const response = await axios.get(url, { responseType: 'arraybuffer' });
-            const photoBuffer = Buffer.from(response.data, 'binary');
-
-            //Write the image to local
-            //For debugging
-            fs.writeFileSync(filePath, Buffer.from(photoBuffer));
+            const response = await fetch(url);
+            const buffer = await response.arrayBuffer();
+            fs.writeFileSync(filePath, Buffer.from(buffer));
 
 
             // Delete the downloaded photo from the local storage
-            //fs.unlinkSync(filePath);
-            //get the public URL of the uploaded photo
-            const [google_url] = await blob.getSignedUrl({
-                action: 'read',
-                expires: Date.now() + 1000 * 60 //URL Expiration time is 1 min
-            })
+            fs.unlinkSync(filePath);
 
-            //Send reply
-
-            await ctx.reply("Photo recieved and uploaded \n " + google_url)
+            await ctx.reply("Uploading successful")
         }
 
     }
